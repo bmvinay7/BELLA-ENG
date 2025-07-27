@@ -136,12 +136,12 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     // Video list
     const videoList = [
-        '视频资源/3D 建模图片制作.mp4',
-        '视频资源/jimeng-2025-07-16-1043-笑着优雅的左右摇晃，过一会儿手扶着下巴，保持微笑.mp4',
-        '视频资源/jimeng-2025-07-16-4437-比耶，然后微笑着优雅的左右摇晃.mp4',
-        '视频资源/生成加油视频.mp4',
-        '视频资源/生成跳舞视频.mp4',
-        '视频资源/负面/jimeng-2025-07-16-9418-双手叉腰，嘴巴一directly-在嘟囔，表情微微生气.mp4'
+        'video_resources/3d_modeling_image_creation.mp4',
+        'video_resources/jimeng-2025-07-16-1043-elegant_side_to_side_swaying_then_chin_resting_with_smile.mp4',
+        'video_resources/jimeng-2025-07-16-4437-peace_sign_then_elegant_swaying_with_smile.mp4',
+        'video_resources/generated_cheering_video.mp4',
+        'video_resources/generated_dancing_video.mp4',
+        'video_resources/negative/jimeng-2025-07-16-9418-hands_on_hips_pouting_slightly_angry_expression.mp4'
     ];
 
     // --- Video cross-fade playback functionality ---
