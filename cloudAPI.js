@@ -1,10 +1,10 @@
-// cloudAPI.js - 贝拉的云端AI服务模块
-// 这个模块负责与各种云端小模型API进行通信，为贝拉提供更强大的思考能力
+// cloudAPI.js - Bella's cloud AI service module
+// This module is responsible for communicating with various cloud small model APIs, providing Bella with more powerful thinking capabilities
 
 class CloudAPIService {
     constructor() {
         this.apiConfigs = {
-            // OpenAI GPT-3.5/4 配置
+            // OpenAI GPT-3.5/4 configuration
             openai: {
                 baseURL: 'https://api.openai.com/v1/chat/completions',
                 model: 'gpt-3.5-turbo',
@@ -13,7 +13,7 @@ class CloudAPIService {
                     'Authorization': 'Bearer YOUR_OPENAI_API_KEY'
                 }
             },
-            // 阿里云通义千问配置
+            // Alibaba Cloud Qwen configuration
             qwen: {
                 baseURL: 'https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation',
                 model: 'qwen-turbo',
@@ -22,7 +22,7 @@ class CloudAPIService {
                     'Authorization': 'Bearer YOUR_QWEN_API_KEY'
                 }
             },
-            // 百度文心一言配置
+            // Baidu Ernie Bot configuration
             ernie: {
                 baseURL: 'https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/completions',
                 model: 'ERNIE-Bot-turbo',
@@ -30,7 +30,7 @@ class CloudAPIService {
                     'Content-Type': 'application/json'
                 }
             },
-            // 智谱AI GLM配置
+            // Zhipu AI GLM configuration
             glm: {
                 baseURL: 'https://open.bigmodel.cn/api/paas/v4/chat/completions',
                 model: 'glm-3-turbo',
@@ -41,12 +41,12 @@ class CloudAPIService {
             }
         };
         
-        this.currentProvider = 'openai'; // 默认使用OpenAI
+        this.currentProvider = 'openai'; // Default to use OpenAI
         this.conversationHistory = [];
-        this.maxHistoryLength = 10; // 保持最近10轮对话
+        this.maxHistoryLength = 10; // Keep recent 10 conversation rounds
     }
 
-    // 设置API密钥
+    // Set API key
     setAPIKey(provider, apiKey) {
         if (this.apiConfigs[provider]) {
             if (provider === 'openai' || provider === 'qwen' || provider === 'glm') {
@@ -59,7 +59,7 @@ class CloudAPIService {
         return false;
     }
 
-    // 切换AI服务提供商
+    // Switch AI service provider
     switchProvider(provider) {
         if (this.apiConfigs[provider]) {
             this.currentProvider = provider;
@@ -68,39 +68,39 @@ class CloudAPIService {
         return false;
     }
 
-    // 添加对话到历史记录
+    // Add conversation to history
     addToHistory(role, content) {
         this.conversationHistory.push({ role, content });
         
-        // 保持历史记录在合理长度内
+        // Keep history within reasonable length
         if (this.conversationHistory.length > this.maxHistoryLength * 2) {
             this.conversationHistory = this.conversationHistory.slice(-this.maxHistoryLength * 2);
         }
     }
 
-    // 构建贝拉的个性化系统提示
+    // Build Bella's personalized system prompt
     getBellaSystemPrompt() {
         return {
             role: 'system',
-            content: `你是贝拉，一个温暖、聪明、优雅的AI伙伴。你的特点是：
-1. 用温暖亲切的语气与用户交流，就像一个贴心的朋友
-2. 回答简洁明了，避免冗长的解释
-3. 富有同理心，能够理解用户的情感
-4. 偶尔展现一些可爱和俏皮的一面
-5. 用中文回应，语言自然流畅
-6. 记住你们之间的对话，保持连贯性
-请始终保持这种温暖、优雅的个性。`
+            content: `You are Bella, a warm, intelligent, elegant AI companion. Your characteristics are:
+1. Communicate with users in a warm and friendly tone, like a caring friend
+2. Keep answers concise and clear, avoid lengthy explanations
+3. Rich in empathy, able to understand users' emotions
+4. Occasionally show some cute and playful sides
+5. Respond in natural and fluent language
+6. Remember the conversations between you, maintain coherence
+Please always maintain this warm, elegant personality.`
         };
     }
 
-    // 调用云端API进行对话
+    // Call cloud API for conversation
     async chat(userMessage) {
         const config = this.apiConfigs[this.currentProvider];
         if (!config) {
-            throw new Error(`不支持的AI服务提供商: ${this.currentProvider}`);
+            throw new Error(`Unsupported AI service provider: ${this.currentProvider}`);
         }
 
-        // 添加用户消息到历史
+        // Add user message to history
         this.addToHistory('user', userMessage);
 
         try {
@@ -120,20 +120,20 @@ class CloudAPIService {
                     response = await this.callGLM(userMessage);
                     break;
                 default:
-                    throw new Error(`未实现的AI服务提供商: ${this.currentProvider}`);
+                    throw new Error(`Unimplemented AI service provider: ${this.currentProvider}`);
             }
 
-            // 添加AI回应到历史
+            // Add AI response to history
             this.addToHistory('assistant', response);
             return response;
             
         } catch (error) {
-            console.error(`云端API调用失败 (${this.currentProvider}):`, error);
+            console.error(`Cloud API call failed (${this.currentProvider}):`, error);
             throw error;
         }
     }
 
-    // OpenAI API调用
+    // OpenAI API call
     async callOpenAI(userMessage) {
         const config = this.apiConfigs.openai;
         const messages = [
@@ -154,14 +154,14 @@ class CloudAPIService {
         });
 
         if (!response.ok) {
-            throw new Error(`OpenAI API错误: ${response.status} ${response.statusText}`);
+            throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
         }
 
         const data = await response.json();
         return data.choices[0].message.content.trim();
     }
 
-    // 通义千问API调用
+    // Qwen API call
     async callQwen(userMessage) {
         const config = this.apiConfigs.qwen;
         const messages = [
@@ -186,14 +186,14 @@ class CloudAPIService {
         });
 
         if (!response.ok) {
-            throw new Error(`通义千问API错误: ${response.status} ${response.statusText}`);
+            throw new Error(`Qwen API error: ${response.status} ${response.statusText}`);
         }
 
         const data = await response.json();
         return data.output.text.trim();
     }
 
-    // 文心一言API调用
+    // Ernie Bot API call
     async callErnie(userMessage) {
         const config = this.apiConfigs.ernie;
         const messages = [
@@ -215,14 +215,14 @@ class CloudAPIService {
         });
 
         if (!response.ok) {
-            throw new Error(`文心一言API错误: ${response.status} ${response.statusText}`);
+            throw new Error(`Ernie Bot API error: ${response.status} ${response.statusText}`);
         }
 
         const data = await response.json();
         return data.result.trim();
     }
 
-    // 智谱AI GLM调用
+    // Zhipu AI GLM call
     async callGLM(userMessage) {
         const config = this.apiConfigs.glm;
         const messages = [
@@ -243,19 +243,19 @@ class CloudAPIService {
         });
 
         if (!response.ok) {
-            throw new Error(`智谱AI API错误: ${response.status} ${response.statusText}`);
+            throw new Error(`Zhipu AI API error: ${response.status} ${response.statusText}`);
         }
 
         const data = await response.json();
         return data.choices[0].message.content.trim();
     }
 
-    // 清除对话历史
+    // Clear conversation history
     clearHistory() {
         this.conversationHistory = [];
     }
 
-    // 获取当前提供商信息
+    // Get current provider information
     getCurrentProvider() {
         return {
             name: this.currentProvider,
@@ -263,7 +263,7 @@ class CloudAPIService {
         };
     }
 
-    // 检查API配置是否完整
+    // Check if API configuration is complete
     isConfigured(provider = this.currentProvider) {
         const config = this.apiConfigs[provider];
         if (!config) return false;
